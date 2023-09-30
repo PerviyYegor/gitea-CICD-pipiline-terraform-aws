@@ -45,9 +45,14 @@ Before using this Terraform configuration, make sure you have:
 
 1. Clone this repository to your local environment.
 
-2. Modify the Terraform configurations in this repository as needed to match your specific requirements.
+2. Modify the Terraform configurations in this repository as needed to match your specific requirements (Optional).
 
-3. Run the following commands to set up the infrastructure:
+3. Set TF_VAR_gh_token in environment or change file with this variable in giteaAWS-codebuild-terraform/vars.tf
+   ```bash
+   export TF_VAR_gh_token="<token>"
+   ```
+
+5. Run the following commands in root of project to set up the infrastructure:
 
    ```bash
    terraform init
@@ -55,6 +60,6 @@ Before using this Terraform configuration, make sure you have:
    terraform apply
    ```
 
-4. After applying the Terraform configuration, manually connect your AWS CodePipeline to your GitHub repository using AWS CodeStar Connections.
+6. After applying the Terraform configuration, manually connect your AWS CodePipeline to your GitHub repository in AWS Console in CodePipeline edit page. (strange terraform politic idk **https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/codestarconnections_connection**)
 
-5. Once everything is set up, any changes made to your GitHub repository will trigger the CI/CD pipeline.
+7. Once everything is set up, any changes made to your GitHub repository will trigger the CI/CD pipeline.
