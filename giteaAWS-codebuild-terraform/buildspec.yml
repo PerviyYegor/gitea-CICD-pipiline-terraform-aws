@@ -1,0 +1,43 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      #- echo "skip downloads step"
+      - yum install -y gcc-c++ make wget tar gzip
+      - curl -sL https://rpm.nodesource.com/setup_18.x | bash -
+      - yum install -y nodejs 
+      - wget -P /tmp https://go.dev/dl/go1.21.1.linux-amd64.tar.gz
+      - rm -rf /usr/local/go && tar -C /usr/local -xzf /tmp/go1.21.1.linux-amd64.tar.gz
+      - export PATH=$PATH:/usr/local/go/bin
+      - go version
+  build:
+    commands:
+      - pwd
+      #- echo "create fake bin file"
+      #- touch gitea
+      #- echo "some words" > gitea
+      - TAGS="bindata" make build
+  post_build:
+    commands: 
+      - echo "I have done"
+      - echo "Started to make zip artifact archive"
+      - mkdir -p app
+      - mkdir -p app/custom
+      - mkdir -p app/custom/conf
+      - mv gitea ./app
+      - echo "[database]" > app/custom/conf/templateAppIni
+      - echo "DB_TYPE = postgres" >> app/custom/conf/templateAppIni
+      - echo "HOST = \$RDS_HOSTNAME:\$RDS_PORT" >> app/custom/conf/templateAppIni
+      - echo "NAME = \$RDS_DB_NAME" >> app/custom/conf/templateAppIni
+      - echo "USER = \$RDS_USERNAME" >> app/custom/conf/templateAppIni
+      - echo "PASSWD = \$RDS_PASSWORD" >> app/custom/conf/templateAppIni
+      - echo "[security]" >> app/custom/conf/templateAppIni
+      - echo "INSTALL_LOCK = true" >> app/custom/conf/templateAppIni
+      
+      - "echo 'web: envsubst < app/custom/conf/templateAppIni >> app/custom/conf/app.ini | ./app/gitea web -port 8080 --config ./app/custom/conf/app.ini' > ./Procfile"
+artifacts: 
+  files: 
+    - './app/**/*'
+    - './Procfile'
+  name: gitea-$(date +%Y%m%d%H%M%S)
