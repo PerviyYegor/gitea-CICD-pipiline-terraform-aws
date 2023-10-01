@@ -1,5 +1,3 @@
-Below is a README file that describes the configuration for a Terraform project managing an AWS pipeline designed for Gitea application development. The pipeline is built around AWS services, including AWS CodePipeline, AWS CodeBuild, Amazon S3, and AWS Elastic Beanstalk, and it is designed to streamline the development process for a Gitea application.
-
 ## AWS Gitea Application Development Pipeline
 
 ### Overview
